@@ -32,7 +32,9 @@ enum class DevStack(
         "PHP",
         "Websites and apps with PHP — classic sites and Laravel projects.",
         "php-cli, common extensions, and Composer",
-    ),
+    );
+
+    fun localizedTitle(context: Any? = null): String = label
 }
 
 enum class AgentKind(
@@ -60,6 +62,8 @@ enum class AgentKind(
         "39.9 MB",
     ),
     ;
+
+    fun localizedTitle(context: Any? = null): String = title
 
     companion object {
         fun fromStored(value: String?): AgentKind = entries.firstOrNull {

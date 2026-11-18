@@ -1031,7 +1031,7 @@ class RuntimeInstaller(private val context: Context) {
             return destination
         }
 
-        val url = "${BuildConfig.RUNTIME_RELEASE_BASE_URL}/${bundle.fileName}"
+        val url = "$RUNTIME_RELEASE_BASE_URL/${bundle.fileName}"
         val downloadingLabel = str(R.string.rt_install_downloading_bundle, bundle.label)
         downloadVerified(url, destination, bundle.sha256) { downloaded, total ->
             val ratio = if (total > 0) downloaded.toFloat() / total else 0f
@@ -1512,7 +1512,7 @@ class RuntimeInstaller(private val context: Context) {
      * .pth file from a tarball built on a non-UTF-8 filesystem) does not
      * abort setup.
      */
-    private fun readProcessOutputSafely(file: File): String = runCatching {
+    private fun readProcessOutputSafely(file: File): String = runCatching<String> {
         file.readTailText(MAX_PROCESS_OUTPUT_BYTES)
     }.getOrElse { error ->
         android.util.Log.w("RuntimeInstaller", "Could not decode process output as UTF-8: ${error.message}")
@@ -1923,6 +1923,7 @@ printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decis
     private fun File.readTextOrNull(): String? = runCatching { readText().trim() }.getOrNull()
 
     companion object {
+        const val RUNTIME_RELEASE_BASE_URL = "https://github.com/techjarves/Mobile-Harness/releases/download/runtime-2026.09.4"
         const val AGY_GUEST_PATH = "/root/.local/bin/agy"
         const val GITHUB_CLI_GUEST_PATH = "/root/.local/bin/gh"
         private const val AGY_VERSION = "1.1.27"
