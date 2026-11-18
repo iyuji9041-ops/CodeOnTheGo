@@ -8,8 +8,8 @@ permissions:
 
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
+      - stage
 
   workflow_dispatch: { }
 

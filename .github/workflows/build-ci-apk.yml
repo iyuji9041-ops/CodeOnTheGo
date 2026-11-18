@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -18,11 +18,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Set up JDK 17
+      - name: Set up JDKs
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: |
+            8
+            17
           cache: 'gradle'
 
       - name: Setup Android SDK
@@ -31,46 +33,17 @@ jobs:
       - name: Install Android Build Tools, NDK and CMake
         run: |
           yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0" "cmake;3.22.1"
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "cmake;3.22.1" "ndk;26.3.11579264"
+
+      - name: Set Java_ROOT environment variable
+        run: echo "Java_ROOT=$JAVA_HOME_8_X64" >> $GITHUB_ENV
 
       - name: Setup Google Services Config
-        run: |
-          if [ ! -f "app/google-services.json" ]; then
-            cat << 'JSON' > app/google-services.json
-          {
-            "project_info": {
-              "project_number": "000000000000",
-              "project_id": "codeonthego-debug",
-              "storage_bucket": "codeonthego-debug.appspot.com"
-            },
-            "client": [
-              {
-                "client_info": {
-                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
-                  "android_client_info": {
-                    "package_name": "com.itsaky.androidide"
-                  }
-                },
-                "oauth_client": [],
-                "api_key": [
-                  {
-                    "current_key": "dummy_api_key_for_ci_build"
-                  }
-                ],
-                "services": {
-                  "appinvite_service": {
-                    "other_platform_oauth_client": []
-                  }
-                }
-              }
-            ],
-            "configuration_version": "1"
-          }
-JSON
-          fi
+        run: bash scripts/setup-google-services.sh
 
       - name: Assemble V8 Debug APK
         run: |
+          chmod +x ./gradlew
           ./gradlew :app:assembleV8Debug --no-daemon --stacktrace
 
       - name: Upload Debug APK Artifact
