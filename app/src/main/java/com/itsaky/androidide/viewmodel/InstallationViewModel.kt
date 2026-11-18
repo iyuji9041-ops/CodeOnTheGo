@@ -132,6 +132,28 @@ class InstallationViewModel(
 
 	suspend fun isSetupCompleteAsync(): Boolean = withContext(ioDispatcher) { checkToolsIsInstalled() }
 
+	fun startRuntimeSetup(
+		context: Context,
+		selectedStacks: Set<com.itsaky.androidide.runtime.DevStack> = setOf(com.itsaky.androidide.runtime.DevStack.ANDROID),
+	) {
+		if (_state.value is Installing) return
+		_state.update { Installing() }
+		viewModelScope.launch {
+			try {
+				val installer = com.itsaky.androidide.runtime.RuntimeInstaller(context)
+				installer.ensureInstalled(selectedStacks) { progress ->
+					_installationProgress.value = progress.message
+				}
+				_state.update { InstallationComplete }
+			} catch (e: Exception) {
+				log.error("Runtime setup failed", e)
+				val errorMsg = e.message ?: context.getString(R.string.title_installation_failed)
+				_events.emit(InstallationEvent.ShowError(errorMsg))
+				_state.update { InstallationError(errorMsg) }
+			}
+		}
+	}
+
 	private fun checkToolsIsInstalled(): Boolean =
 		IJdkDistributionProvider.getInstance().installedDistributions.isNotEmpty() &&
 			Environment.ANDROID_HOME.exists()

@@ -51,8 +51,7 @@ import java.io.File
  * that must cover them has to be added here too, or hoisted somewhere both paths share.
  */
 internal fun Context.isIdeSetupComplete(): Boolean =
-	isJdkInstalled() &&
-		androidSdkHome().exists() &&
+	(com.itsaky.androidide.runtime.RuntimeInstaller(this).isInstalled() || (isJdkInstalled() && androidSdkHome().exists())) &&
 		PermissionsHelper.areAllPermissionsGranted(this)
 
 /**

@@ -220,6 +220,13 @@ android {
 		targetCompatibility = JavaVersion.VERSION_17
 		isCoreLibraryDesugaringEnabled = true
 	}
+
+	externalNativeBuild {
+		cmake {
+			path = file("src/main/cpp/CMakeLists.txt")
+			version = "3.22.1"
+		}
+	}
 }
 
 // DoD coverage gate. Two path traps are baked in below; both fail silently rather
@@ -359,6 +366,7 @@ dependencies {
 	implementation(libs.common.charts)
 	implementation(libs.common.hiddenApiBypass)
 	implementation(libs.commons.compress)
+	implementation(libs.zstd.jni)
 
 	implementation(libs.google.auto.service.annotations)
 	implementation(libs.google.gson)
@@ -1169,9 +1177,7 @@ afterEvaluate {
 			}
 		}
 
-		if (!isCiCd) {
-			dependsOn("assetsDownloadRelease")
-		}
+		// Legacy assets download disabled in favor of Mobile-Harness RuntimeInstaller
 	}
 
 	tasks.named("assembleV8Debug").configure {
@@ -1189,9 +1195,7 @@ afterEvaluate {
 			}
 		}
 
-		if (!isCiCd) {
-			dependsOn("assetsDownloadDebug")
-		}
+		// Legacy assets download disabled in favor of Mobile-Harness RuntimeInstaller
 	}
 
 	tasks.named("assembleV7Debug").configure {
@@ -1209,9 +1213,7 @@ afterEvaluate {
 			}
 		}
 
-		if (!isCiCd) {
-			dependsOn("assetsDownloadDebug")
-		}
+		// Legacy assets download disabled in favor of Mobile-Harness RuntimeInstaller
 	}
 }
 

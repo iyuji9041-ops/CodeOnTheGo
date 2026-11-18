@@ -81,6 +81,7 @@ compose-bom = "2024.02.00"
 compose-compiler = "2.1.21"
 
 leakcanary = "2.14"
+zstd = "1.5.7-12"
 
 
 [libraries]
@@ -112,6 +113,7 @@ commons-compress = { module = "org.apache.commons:commons-compress", version.ref
 tukaani-xz = { module = "org.tukaani:xz", version.ref = "tukaaniXz" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commonsText" }
 commons-text-v1140 = { module = "org.apache.commons:commons-text", version.ref = "commonsTextVersion" }
+zstd-jni = { module = "com.github.luben:zstd-jni", version.ref = "zstd" }
 composite-appintro = { module = "com.itsaky.androidide.build:appintro" }
 composite-constants = { module = "com.itsaky.androidide.build:constants" }
 composite-desugaringCore = { module = "com.itsaky.androidide.build:desugaring-core" }
