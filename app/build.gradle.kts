@@ -92,6 +92,10 @@ android {
 
 	signingConfigs {
 		getByName("debug") {
+			storeFile = File(System.getProperty("user.home"), ".android/debug.keystore")
+			storePassword = "android"
+			keyAlias = "androiddebugkey"
+			keyPassword = "android"
 			enableV2Signing = true
 			enableV3Signing = true
 		}

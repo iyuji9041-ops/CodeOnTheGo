@@ -39,6 +39,14 @@ jobs:
       - name: Set Java_ROOT environment variable
         run: echo "Java_ROOT=$JAVA_HOME_8_X64" >> $GITHUB_ENV
 
+      - name: Install advancecomp
+        run: sudo apt-get update && sudo apt-get install -y advancecomp
+
+      - name: Setup Android Debug Keystore
+        run: |
+          mkdir -p ~/.android
+          keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
       - name: Setup Google Services Config
         run: bash scripts/setup-google-services.sh
 
